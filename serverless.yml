@@ -8,12 +8,10 @@ provider:
   environment:
     ACCESS_TOKEN: ${env:ACCESS_KEY_ID}
     SECRET_KEY: ${env:SECRET_ACCESS_KEY}
-
 package:
   patterns:
     - '!./**'
     - ./build/**
-
 functions:
   app:
     handler: build/main
@@ -24,12 +22,14 @@ functions:
           cors: true
 resources:
   Resources:
-    UsersTable:
+    DeviceTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: Device
         AttributeDefinitions:
           - AttributeName: id
+            AttributeType: S
+          - AttributeName: deviceModel
             AttributeType: S
           - AttributeName: name
             AttributeType: S
