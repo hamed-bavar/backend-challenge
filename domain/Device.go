@@ -1,11 +1,11 @@
 package domain
 
 type Device struct {
-	id          string `validate:"required"`
-	deviceModel string `validate:"required"`
-	name        string `validate:"required"`
-	note        string `validate:"required"`
-	serial      string `validate:"required"`
+	Id          string `json:"id" validate:"required"`
+	DeviceModel string `json:"deviceModel" validate:"required"`
+	Name        string `json:"name" validate:"required"`
+	Note        string `json:"note" validate:"required"`
+	Serial      string `json:"serial" validate:"required"`
 }
 
 type DeviceRepository interface {
