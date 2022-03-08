@@ -1,6 +1,6 @@
 package domain
 
-import "test/lib/errs"
+import "test/lib/errors"
 
 type Device struct {
 	Id          string `json:"id" validate:"required"`
@@ -10,6 +10,6 @@ type Device struct {
 	Serial      string `json:"serial" validate:"required"`
 }
 type DeviceRepository interface {
-	findById(string) (*Device, errs.AppError)
-	create(Device) (Device, errs.AppError)
+	FindById(string) (*Device, *errors.AppError)
+	Create(Device) (*Device, *errors.AppError)
 }

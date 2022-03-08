@@ -6,14 +6,14 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 	"test/domain"
-	"test/lib/errs"
+	"test/lib/errors"
 )
 
 type DeviceRepositoryDb struct {
 	db dynamodbiface.DynamoDBAPI
 }
 
-func (d *DeviceRepositoryDb) create(device *domain.Device) (*domain.Device, *errs.AppError) {
+func (d *DeviceRepositoryDb) create(device *domain.Device) (*domain.Device, *errors.AppError) {
 	marshaledDevice, _ := dynamodbattribute.MarshalMap(device)
 	dynamoDbItem := &dynamodb.PutItemInput{
 		Item:      marshaledDevice,
@@ -21,7 +21,7 @@ func (d *DeviceRepositoryDb) create(device *domain.Device) (*domain.Device, *err
 	}
 	_, err := d.db.PutItem(dynamoDbItem)
 	if err != nil {
-		return nil, errs.InternalServerError("Unexpected database error")
+		return nil, errors.InternalServerError("Unexpected database error")
 	}
 	return device, nil
 }
