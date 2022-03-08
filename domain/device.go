@@ -1,6 +1,6 @@
 package domain
 
-import "test/lib/errors"
+import "challenge/lib/errors"
 
 type Device struct {
 	Id          string `json:"id" validate:"required"`
@@ -9,7 +9,7 @@ type Device struct {
 	Note        string `json:"note" validate:"required"`
 	Serial      string `json:"serial" validate:"required"`
 }
+
 type DeviceRepository interface {
-	FindById(string) (*Device, *errors.AppError)
-	Create(Device) (*Device, *errors.AppError)
+	Create(device *Device) (*Device, *errors.AppError)
 }

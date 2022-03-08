@@ -5,7 +5,7 @@ provider:
   runtime: go1.x
   lambdaHashingVersion: 20201221
   stage: api
-  region: us-east-1
+  region: us-west-2
   environment:
     ACCESS_TOKEN: ${env:ACCESS_KEY_ID}
     SECRET_KEY: ${env:SECRET_ACCESS_KEY}
