@@ -1,4 +1,5 @@
 service: eddie-backendChallenge
+useDotenv: true
 provider:
   name: aws
   runtime: go1.x
@@ -29,14 +30,7 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: deviceModel
-            AttributeType: S
-          - AttributeName: name
-            AttributeType: S
-          - AttributeName: note
-            AttributeType: S
-          - AttributeName: serial
-            AttributeType: S
+
         KeySchema:
           - AttributeName: id
             KeyType: HASH
