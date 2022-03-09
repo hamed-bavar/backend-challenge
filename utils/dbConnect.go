@@ -14,6 +14,8 @@ func GetDbClient() (*dynamodb.DynamoDB, *errors.AppError) {
 		fmt.Println("Error while creating session:", err)
 		return nil, errors.InternalServerError("Internal Server Error from dynamo db")
 	}
+	fmt.Println("Session created successfully", err)
 	dbClient := dynamodb.New(sess)
+	fmt.Println(dbClient, "db client")
 	return dbClient, nil
 }
