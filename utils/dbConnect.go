@@ -12,6 +12,7 @@ import (
 
 func GetDbClient() (*dynamodb.DynamoDB, *errors.AppError) {
 	credential := credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), "")
+	fmt.Println(credential, "credentials")
 	sess, err := session.NewSession(&aws.Config{Region: aws.String("us-west-2"), Credentials: credential})
 	if err != nil {
 		fmt.Println("Error while creating session:", sess)
