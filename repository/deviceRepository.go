@@ -21,7 +21,7 @@ func (d DeviceRepositoryDb) Create(device *domain.Device) (*domain.Device, *erro
 	}
 	_, err := d.db.PutItem(dynamoDbItem)
 	if err != nil {
-		return nil, errors.InternalServerError("Internal Server Error")
+		return nil, errors.InternalServerError("Internal Server Error while put item")
 	}
 	return device, nil
 }

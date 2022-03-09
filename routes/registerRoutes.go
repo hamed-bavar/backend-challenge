@@ -11,9 +11,8 @@ import (
 func Register(router *mux.Router) {
 	//create db instance
 	dbClient, _ := utils.GetDbClient()
-
 	//create device repo
 	deviceRepo := repository.NewDeviceRepositoryDb(dbClient)
 	deviceController := controller.DeviceController{Service: service.NewDeviceService(deviceRepo)}
-	router.HandleFunc("/customers", deviceController.CreateDevice).Methods("POST")
+	router.HandleFunc("/device", deviceController.CreateDevice).Methods("POST")
 }
