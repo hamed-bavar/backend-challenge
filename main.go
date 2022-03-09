@@ -2,6 +2,7 @@ package main
 
 import (
 	"challenge/routes"
+	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/awslabs/aws-lambda-go-api-proxy/gorillamux"
@@ -9,6 +10,7 @@ import (
 )
 
 func main() {
+	fmt.Println("Starting Lambda...")
 	lambda.Start(
 		func(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 			router := mux.NewRouter()

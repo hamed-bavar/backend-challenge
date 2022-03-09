@@ -3,14 +3,13 @@ package service
 import (
 	"challenge/domain"
 	"challenge/lib/errors"
-	"challenge/repository"
 )
 
 type DeviceService interface {
 	CreateDevice(*domain.Device) (*domain.Device, *errors.AppError)
 }
 type DefaultDeviceService struct {
-	repo repository.DeviceRepository
+	repo domain.DeviceRepository
 }
 
 func (s DefaultDeviceService) CreateDevice(device *domain.Device) (*domain.Device, *errors.AppError) {
@@ -20,6 +19,6 @@ func (s DefaultDeviceService) CreateDevice(device *domain.Device) (*domain.Devic
 	}
 	return d, nil
 }
-func NewDeviceService(repo repository.DeviceRepository) DefaultDeviceService {
+func NewDeviceService(repo domain.DeviceRepository) DefaultDeviceService {
 	return DefaultDeviceService{repo}
 }
