@@ -12,4 +12,5 @@ type Device struct {
 
 type DeviceRepository interface {
 	Create(device *Device) (*Device, *errors.AppError)
+	FindById(id string) (*Device, *errors.AppError)
 }

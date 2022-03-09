@@ -10,6 +10,7 @@ provider:
     ACCESS_TOKEN: ${env:AWS_ACCESS_KEY_ID}
     SECRET_KEY: ${env:AWS_SECRET_ACCESS_KEY}
 package:
+  #exclude all files except production main.go file which is defined in build directory
   patterns:
     - '!./**'
     - ./build/**

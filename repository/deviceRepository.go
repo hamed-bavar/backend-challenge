@@ -21,7 +21,30 @@ func (d DeviceRepositoryDb) Create(device *domain.Device) (*domain.Device, *erro
 	}
 	_, err := d.db.PutItem(dynamoDbItem)
 	if err != nil {
-		return nil, errors.InternalServerError("Internal Server Error while put item")
+		return nil, errors.InternalServerError("Internal Server Error")
+	}
+	return device, nil
+}
+func (d DeviceRepositoryDb) FindById(id string) (*domain.Device, *errors.AppError) {
+	dynamoDbItem := &dynamodb.GetItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(id),
+			},
+		},
+		TableName: aws.String("Device"),
+	}
+	result, err := d.db.GetItem(dynamoDbItem)
+	if err != nil {
+		return nil, errors.InternalServerError("Internal Server Error")
+	}
+	if result.Item == nil {
+		return nil, errors.NotFoundError("Device not found")
+	}
+	device := &domain.Device{}
+	err = dynamodbattribute.UnmarshalMap(result.Item, device)
+	if err != nil {
+		return nil, errors.InternalServerError("Internal Server Error")
 	}
 	return device, nil
 }
