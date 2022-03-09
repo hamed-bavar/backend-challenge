@@ -3,7 +3,6 @@ package repository
 import (
 	"challenge/domain"
 	"challenge/lib/errors"
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
@@ -22,7 +21,6 @@ func (d DeviceRepositoryDb) Create(device *domain.Device) (*domain.Device, *erro
 	}
 	_, err := d.db.PutItem(dynamoDbItem)
 	if err != nil {
-		fmt.Println("Error while put item in dynamo ", err)
 		return nil, errors.InternalServerError("Internal Server Error while put item")
 	}
 	return device, nil

@@ -2,7 +2,6 @@ package utils
 
 import (
 	"challenge/lib/errors"
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -12,15 +11,10 @@ import (
 
 func GetDbClient() (*dynamodb.DynamoDB, *errors.AppError) {
 	credential := credentials.NewStaticCredentials(os.Getenv("ACCESS_TOKEN"), os.Getenv("SECRET_KEY"), "")
-	fmt.Println("key", os.Getenv("ACCESS_TOKEN"))
-	fmt.Println("key", os.Getenv("SECRET_KEY"))
 	sess, err := session.NewSession(&aws.Config{Region: aws.String("us-west-2"), Credentials: credential})
 	if err != nil {
-		fmt.Println("Error while creating session:", sess)
 		return nil, errors.InternalServerError("Internal Server Error from dynamo db")
 	}
-	fmt.Println("Session created successfully", err)
 	dbClient := dynamodb.New(sess)
-	fmt.Println(dbClient, "db client")
 	return dbClient, nil
 }
