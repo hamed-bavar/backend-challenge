@@ -1,0 +1,19 @@
+name: Go
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: npm i -g serverless
+    - run: serverless deploy
+      env:
+        ACCESS_KEY_ID: ${{ envs.ACCESS_KEY_ID }}
+        SECRET_ACCESS_KEY: ${{ envs.SECRET_ACCESS_KEY }}
