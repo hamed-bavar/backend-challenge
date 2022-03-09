@@ -7,14 +7,13 @@ on:
     branches: [ master ]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - run: npm i -g serverless
+    - run: serverless deploy
       env:
         ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
         SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-    - run: npm i -g serverless
-    - run: serverless deploy
      
