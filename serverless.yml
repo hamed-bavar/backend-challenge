@@ -7,8 +7,8 @@ provider:
   stage: api
   region: us-west-2
   environment:
-    ACCESS_TOKEN: ${env:ACCESS_KEY_ID}
-    SECRET_KEY: ${env:SECRET_ACCESS_KEY}
+    ACCESS_TOKEN: ${env:AWS_ACCESS_KEY_ID}
+    SECRET_KEY: ${env:AWS_SECRET_ACCESS_KEY}
 package:
   patterns:
     - '!./**'
