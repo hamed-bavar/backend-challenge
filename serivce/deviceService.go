@@ -3,6 +3,8 @@ package service
 import (
 	"challenge/domain"
 	"challenge/lib/errors"
+	"challenge/lib/logger"
+	"github.com/go-playground/validator/v10"
 )
 
 type DeviceService interface {
@@ -14,6 +16,12 @@ type DefaultDeviceService struct {
 }
 
 func (s DefaultDeviceService) CreateDevice(device *domain.Device) (*domain.Device, *errors.AppError) {
+	validate := validator.New()
+	validationError := validate.Struct(device)
+	if validationError != nil {
+		logger.Error("Error while validating data" + validationError.Error())
+		return nil, errors.NotFoundError("some fields are missing" + validationError.Error())
+	}
 	d, err := s.repo.Create(device)
 	if err != nil {
 		return nil, err
