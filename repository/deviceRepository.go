@@ -3,6 +3,7 @@ package repository
 import (
 	"challenge/domain"
 	"challenge/lib/errors"
+	"challenge/lib/logger"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
@@ -21,10 +22,12 @@ func (d DeviceRepositoryDb) Create(device *domain.Device) (*domain.Device, *erro
 	}
 	_, err := d.db.PutItem(dynamoDbItem)
 	if err != nil {
+		logger.Error("Error while putting item in dynamoDb" + err.Error())
 		return nil, errors.InternalServerError("Internal Server Error")
 	}
 	return device, nil
 }
+
 func (d DeviceRepositoryDb) FindById(id string) (*domain.Device, *errors.AppError) {
 	dynamoDbItem := &dynamodb.GetItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
@@ -36,6 +39,7 @@ func (d DeviceRepositoryDb) FindById(id string) (*domain.Device, *errors.AppErro
 	}
 	result, err := d.db.GetItem(dynamoDbItem)
 	if err != nil {
+		logger.Error("Error while getting item from dynamoDb" + err.Error())
 		return nil, errors.InternalServerError("Internal Server Error")
 	}
 	if result.Item == nil {
@@ -44,6 +48,7 @@ func (d DeviceRepositoryDb) FindById(id string) (*domain.Device, *errors.AppErro
 	device := &domain.Device{}
 	err = dynamodbattribute.UnmarshalMap(result.Item, device)
 	if err != nil {
+		logger.Error("Error while unmarshalling item from dynamoDb" + err.Error())
 		return nil, errors.InternalServerError("Internal Server Error")
 	}
 	return device, nil
