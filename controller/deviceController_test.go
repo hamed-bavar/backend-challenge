@@ -15,7 +15,7 @@ import (
 	"testing"
 )
 
-func TestCreateDeviceController(t *testing.T) {
+func TestDeviceController_CreateDevice(t *testing.T) {
 	mockDevice := domain.Device{
 		Id:          "1234",
 		DeviceModel: "mercedes",
@@ -31,8 +31,8 @@ func TestCreateDeviceController(t *testing.T) {
 		output interface{}
 	}{
 		{name: "create device with status 201", input: mockDevice, status: http.StatusCreated, output: mockDevice},
-		{name: "invalid data with status 400", input: domain.Device{Id: "1"}, status: 400, err: errors.ValidationError("some fields are missing"), output: nil},
-		{name: "server error with status 500", input: mockDevice, status: 500, err: errors.InternalServerError("internal server error"), output: nil},
+		{name: "invalid data with status 400", input: domain.Device{Id: "1"}, status: http.StatusBadRequest, err: errors.ValidationError("some fields are missing"), output: nil},
+		{name: "server error with status 500", input: mockDevice, status: http.StatusInternalServerError, err: errors.InternalServerError("internal server error"), output: nil},
 	}
 
 	for _, test := range tests {
@@ -48,8 +48,8 @@ func TestCreateDeviceController(t *testing.T) {
 			marshaledDevice, _ := json.Marshal(dummyDevice)
 			mockService.EXPECT().CreateDevice(&dummyDevice).Return(&dummyDevice, test.err)
 			router := mux.NewRouter()
-			router.HandleFunc("/devices", dc.CreateDevice)
-			request, _ := http.NewRequest(http.MethodGet, "/devices", bytes.NewReader(marshaledDevice))
+			router.HandleFunc("/devices", dc.CreateDevice).Methods("POST")
+			request, _ := http.NewRequest(http.MethodPost, "/devices", bytes.NewReader(marshaledDevice))
 			recorder := httptest.NewRecorder()
 			router.ServeHTTP(recorder, request)
 
@@ -62,19 +62,49 @@ func TestCreateDeviceController(t *testing.T) {
 	}
 }
 
-//func Test_should_return_error_when_device_not_found(t *testing.T) {
-//	// Given
-//	device := &models.Device{
-//		ID: "1",
-//	}
-//	deviceRepository := &mocks.DeviceRepository{}
-//	deviceRepository.On("FindByID", device.ID).Return(nil, errors.New("error"))
-//	deviceController := NewDeviceController(deviceRepository)
-//
-//	// When
-//	err := deviceController.Delete(device)
-//
-//	// Then
-//	assert.NotNil(t, err)
-//	assert.Equal(t, "error", err.Error())
-//}
+func TestDeviceController_GetDevice(t *testing.T) {
+	mockDevice := domain.Device{
+		Id:          "1234",
+		DeviceModel: "mercedes",
+		Name:        "your car",
+		Note:        "this is your car",
+		Serial:      "123456789",
+	}
+	tests := []struct {
+		name   string
+		err    *errors.AppError
+		input  string
+		status int
+		output interface{}
+	}{
+		{name: "get device with id 123", input: "123", status: http.StatusOK, output: mockDevice},
+		{name: "invalid data with status 400", input: "123", status: http.StatusNotFound, err: errors.NotFoundError("Device not found"), output: nil},
+		{name: "server error with status 500", input: "123", status: http.StatusInternalServerError, err: errors.InternalServerError("internal server error"), output: nil},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			// Given
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			mockService := service.NewMockDeviceService(ctrl)
+			dc := DeviceController{
+				Service: mockService,
+			}
+			dummyDevice := mockDevice
+			//marshaledDevice, _ := json.Marshal(dummyDevice)
+			mockService.EXPECT().GetDevice(test.input).Return(&dummyDevice, test.err)
+			router := mux.NewRouter()
+			router.HandleFunc("/devices/{id}", dc.GetDevice).Methods("GET")
+			request, _ := http.NewRequest(http.MethodGet, "/devices/"+test.input, nil)
+			recorder := httptest.NewRecorder()
+			router.ServeHTTP(recorder, request)
+
+			require.Equal(t, test.status, recorder.Code)
+
+			if recorder.Code == http.StatusOK {
+				marshaledOutput, _ := json.Marshal(mockDevice)
+				require.JSONEq(t, string(marshaledOutput), recorder.Body.String())
+			}
+		})
+	}
+}

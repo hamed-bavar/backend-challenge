@@ -2,7 +2,7 @@
 // Source: challenge/serivce (interfaces: DeviceService)
 
 // Package service is a generated GoMock package.
-package service
+package domain
 
 import (
 	domain "challenge/domain"

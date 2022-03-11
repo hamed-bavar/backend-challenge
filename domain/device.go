@@ -10,6 +10,7 @@ type Device struct {
 	Serial      string `json:"serial" validate:"required"`
 }
 
+//go:generate mockgen -destination=../mocks/mockDeviceRepository.go -package=domain . DeviceRepository
 type DeviceRepository interface {
 	Create(device *Device) (*Device, *errors.AppError)
 	FindById(id string) (*Device, *errors.AppError)
