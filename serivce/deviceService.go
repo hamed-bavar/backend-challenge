@@ -4,16 +4,17 @@ import (
 	"challenge/domain"
 	"challenge/lib/errors"
 	"challenge/lib/logger"
+	"challenge/repository"
 	"github.com/go-playground/validator/v10"
 )
 
-//go:generate mockgen -destination=../mocks/mockDeviceService.go -package=service . DeviceService
+//go:generate mockgen -destination=../mocks/mockDeviceService/mockDeviceService.go -package=mockDeviceService . DeviceService
 type DeviceService interface {
 	CreateDevice(*domain.Device) (*domain.Device, *errors.AppError)
 	GetDevice(string) (*domain.Device, *errors.AppError)
 }
 type DefaultDeviceService struct {
-	repo domain.DeviceRepository
+	repo repository.DeviceRepository
 }
 
 func (s DefaultDeviceService) CreateDevice(device *domain.Device) (*domain.Device, *errors.AppError) {
@@ -36,6 +37,6 @@ func (s DefaultDeviceService) GetDevice(id string) (*domain.Device, *errors.AppE
 	}
 	return d, nil
 }
-func NewDeviceService(repo domain.DeviceRepository) DefaultDeviceService {
+func NewDeviceService(repo repository.DeviceRepository) DefaultDeviceService {
 	return DefaultDeviceService{repo}
 }

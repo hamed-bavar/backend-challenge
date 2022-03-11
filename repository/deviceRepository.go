@@ -10,6 +10,12 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 )
 
+//go:generate mockgen -destination=../mocks/mockDeviceRepository/mockDeviceRepository.go -package=mockDeviceRepository . DeviceRepository
+type DeviceRepository interface {
+	Create(device *domain.Device) (*domain.Device, *errors.AppError)
+	FindById(id string) (*domain.Device, *errors.AppError)
+}
+
 type DeviceRepositoryDb struct {
 	db dynamodbiface.DynamoDBAPI
 }

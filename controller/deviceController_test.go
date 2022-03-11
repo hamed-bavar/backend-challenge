@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"challenge/domain"
 	"challenge/lib/errors"
-	service "challenge/mocks"
+	service "challenge/mocks/mockDeviceService"
 	"encoding/json"
 	"github.com/go-playground/assert/v2"
 	"github.com/golang/mock/gomock"
