@@ -7,6 +7,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+//go:generate mockgen -destination=../mocks/mockDeviceService.go -package=service . DeviceService
 type DeviceService interface {
 	CreateDevice(*domain.Device) (*domain.Device, *errors.AppError)
 	GetDevice(string) (*domain.Device, *errors.AppError)
@@ -20,7 +21,7 @@ func (s DefaultDeviceService) CreateDevice(device *domain.Device) (*domain.Devic
 	validationError := validate.Struct(device)
 	if validationError != nil {
 		logger.Error("Error while validating data" + validationError.Error())
-		return nil, errors.NotFoundError("some fields are missing" + validationError.Error())
+		return nil, errors.ValidationError("some fields are missing")
 	}
 	d, err := s.repo.Create(device)
 	if err != nil {

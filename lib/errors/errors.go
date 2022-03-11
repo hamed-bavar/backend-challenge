@@ -14,5 +14,5 @@ func InternalServerError(message string) *AppError {
 	return &AppError{http.StatusInternalServerError, message}
 }
 func ValidationError(message string) *AppError {
-	return &AppError{http.StatusUnprocessableEntity, message}
+	return &AppError{http.StatusBadRequest, message}
 }

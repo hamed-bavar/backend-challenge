@@ -13,6 +13,7 @@ func Register(router *mux.Router) {
 	dbClient, _ := utils.GetDbClient()
 	deviceRepo := repository.NewDeviceRepositoryDb(dbClient)
 	deviceController := controller.DeviceController{Service: service.NewDeviceService(deviceRepo)}
+
 	router.HandleFunc("/devices", deviceController.CreateDevice).Methods("POST")
 	router.HandleFunc("/devices/{id}", deviceController.GetDevice).Methods("GET")
 }
