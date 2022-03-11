@@ -3,7 +3,7 @@ package routes
 import (
 	"challenge/controller"
 	"challenge/repository"
-	"challenge/serivce"
+	"challenge/service"
 	"challenge/utils"
 	"github.com/gorilla/mux"
 )

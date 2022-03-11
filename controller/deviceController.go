@@ -3,7 +3,7 @@ package controller
 import (
 	"challenge/domain"
 	"challenge/lib/logger"
-	service "challenge/serivce"
+	service "challenge/service"
 	"challenge/utils"
 	"encoding/json"
 	"github.com/gorilla/mux"

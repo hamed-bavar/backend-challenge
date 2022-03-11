@@ -18,6 +18,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
+	github.com/gusaul/go-dynamock v0.0.0-20210107061312-3e989056e1e6 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
