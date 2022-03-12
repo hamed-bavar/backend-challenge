@@ -31,7 +31,7 @@ func TestDeviceController_CreateDevice(t *testing.T) {
 		output interface{}
 	}{
 		{name: "create device with status 201", input: mockDevice, status: http.StatusCreated, output: mockDevice},
-		{name: "invalid data with status 400", input: domain.Device{Id: "1"}, status: http.StatusBadRequest, err: errors.ValidationError("some fields are missing"), output: nil},
+		{name: "invalid data with status 400", input: domain.Device{Id: "1"}, status: 400, err: errors.ValidationError("some fields are missing"), output: nil},
 		{name: "server error with status 500", input: mockDevice, status: http.StatusInternalServerError, err: errors.InternalServerError("internal server error"), output: nil},
 	}
 
@@ -61,7 +61,6 @@ func TestDeviceController_CreateDevice(t *testing.T) {
 		})
 	}
 }
-
 func TestDeviceController_GetDevice(t *testing.T) {
 	mockDevice := domain.Device{
 		Id:          "1234",
@@ -107,4 +106,18 @@ func TestDeviceController_GetDevice(t *testing.T) {
 			}
 		})
 	}
+}
+func TestCreateDeviceOnInvalidJson(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockService := service.NewMockDeviceService(ctrl)
+	dc := DeviceController{
+		Service: mockService,
+	}
+	router := mux.NewRouter()
+	router.HandleFunc("/devices", dc.CreateDevice).Methods("POST")
+	request, _ := http.NewRequest(http.MethodPost, "/devices", bytes.NewReader([]byte("{invalid json")))
+	recorder := httptest.NewRecorder()
+	router.ServeHTTP(recorder, request)
+	assert.Equal(t, http.StatusBadRequest, recorder.Code)
 }

@@ -19,7 +19,7 @@ func (dc *DeviceController) CreateDevice(w http.ResponseWriter, r *http.Request)
 	//validate request
 	if err := json.NewDecoder(r.Body).Decode(&device); err != nil {
 		logger.Error("Error while decoding posted data" + err.Error())
-		utils.WriteResponse(w, http.StatusBadRequest, "invalid fields")
+		utils.WriteResponse(w, http.StatusBadRequest, "invalid json")
 		return
 	}
 	response, appError := dc.Service.CreateDevice(&device)
