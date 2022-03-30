@@ -31,7 +31,7 @@ func (d DeviceRepositoryDb) Create(device *domain.Device) (*domain.Device, *erro
 	err := d.table.Put(device).Run()
 	if err != nil {
 		logger.Error("Error while putting item in dynamoDb" + err.Error())
-		return nil, errors.InternalServerError("Internal Server Error")
+		return nil, errors.InternalServerError("Internal Server Error" + err.Error())
 	}
 	return device, nil
 }
@@ -49,7 +49,7 @@ func (d DeviceRepositoryDb) FindById(id string) (*domain.Device, *errors.AppErro
 	err := d.table.Get("Id", id).
 		One(&result)
 	if err != nil {
-		return nil, errors.NotFoundError("Device not found")
+		return nil, errors.NotFoundError("Device not found" + err.Error())
 	}
 
 	//result, err := d.db.GetItem(dynamoDbItem)
