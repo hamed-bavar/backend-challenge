@@ -18,54 +18,21 @@ type DeviceRepositoryDb struct {
 }
 
 func (d DeviceRepositoryDb) Create(device *domain.Device) (*domain.Device, *errors.AppError) {
-	//dynamoDbItem := &dynamodb.PutItemInput{
-	//	Item:      marshaledDevice,
-	//	TableName: aws.String("Device"),
-	//}
-	//_, err := d.db.PutItem(dynamoDbItem)
-	//if err != nil {
-	//	logger.Error("Error while putting item in dynamoDb" + err.Error())
-	//	return nil, errors.InternalServerError("Internal Server Error")
-	//}
-	//return device, nil
 	err := d.table.Put(device).Run()
 	if err != nil {
-		logger.Error("Error while putting item in dynamoDb" + err.Error())
-		return nil, errors.InternalServerError("Internal Server Error" + err.Error())
+		logger.Error("Error while putting item in dynamoDb")
+		return nil, errors.InternalServerError("Internal Server Error")
 	}
 	return device, nil
 }
 
 func (d DeviceRepositoryDb) FindById(id string) (*domain.Device, *errors.AppError) {
-	//dynamoDbItem := &dynamodb.GetItemInput{
-	//	Key: map[string]*dynamodb.AttributeValue{
-	//		"id": {
-	//			S: aws.String(id),
-	//		},
-	//	},
-	//	TableName: aws.String("Device"),
-	//}
 	var result domain.Device
 	err := d.table.Get("id", id).
 		One(&result)
 	if err != nil {
-		return nil, errors.NotFoundError("Device not found" + err.Error())
+		return nil, errors.NotFoundError("Device not found")
 	}
-
-	//result, err := d.db.GetItem(dynamoDbItem)
-	//if err != nil {
-	//	logger.Error("Error while getting item from dynamoDb" + err.Error())
-	//	return nil, errors.InternalServerError("Internal Server Error")
-	//}
-	//if result.Item == nil {
-	//	return nil, errors.NotFoundError("Device not found")
-	//}
-	//device := &domain.Device{}
-	//err = dynamodbattribute.UnmarshalMap(result.Item, device)
-	//if err != nil {
-	//	logger.Error("Error while unmarshalling item from dynamoDb" + err.Error())
-	//	return nil, errors.InternalServerError("Internal Server Error")
-	//}
 	return &result, nil
 }
 func NewDeviceRepositoryDb(dbClient *dynamo.DB) DeviceRepositoryDb {
