@@ -3,6 +3,7 @@ package repository
 import (
 	"challenge/domain"
 	"challenge/lib/errors"
+	"challenge/lib/logger"
 	"github.com/guregu/dynamo"
 )
 
@@ -13,11 +14,10 @@ type DeviceRepository interface {
 }
 
 type DeviceRepositoryDb struct {
-	db *dynamo.DB
+	table dynamo.Table
 }
 
 func (d DeviceRepositoryDb) Create(device *domain.Device) (*domain.Device, *errors.AppError) {
-	//marshaledDevice, _ := dynamodbattribute.MarshalMap(device)
 	//dynamoDbItem := &dynamodb.PutItemInput{
 	//	Item:      marshaledDevice,
 	//	TableName: aws.String("Device"),
@@ -28,7 +28,12 @@ func (d DeviceRepositoryDb) Create(device *domain.Device) (*domain.Device, *erro
 	//	return nil, errors.InternalServerError("Internal Server Error")
 	//}
 	//return device, nil
-	return &domain.Device{Id: "1", Name: "test"}, nil
+	err := d.table.Put(device).Run()
+	if err != nil {
+		logger.Error("Error while putting item in dynamoDb" + err.Error())
+		return nil, errors.InternalServerError("Internal Server Error")
+	}
+	return device, nil
 }
 
 func (d DeviceRepositoryDb) FindById(id string) (*domain.Device, *errors.AppError) {
@@ -40,6 +45,13 @@ func (d DeviceRepositoryDb) FindById(id string) (*domain.Device, *errors.AppErro
 	//	},
 	//	TableName: aws.String("Device"),
 	//}
+	var result domain.Device
+	err := d.table.Get("Id", id).
+		One(&result)
+	if err != nil {
+		return nil, errors.NotFoundError("Device not found")
+	}
+
 	//result, err := d.db.GetItem(dynamoDbItem)
 	//if err != nil {
 	//	logger.Error("Error while getting item from dynamoDb" + err.Error())
@@ -54,8 +66,9 @@ func (d DeviceRepositoryDb) FindById(id string) (*domain.Device, *errors.AppErro
 	//	logger.Error("Error while unmarshalling item from dynamoDb" + err.Error())
 	//	return nil, errors.InternalServerError("Internal Server Error")
 	//}
-	return &domain.Device{Id: "1", Name: "test"}, nil
+	return &result, nil
 }
 func NewDeviceRepositoryDb(dbClient *dynamo.DB) DeviceRepositoryDb {
-	return DeviceRepositoryDb{dbClient}
+	var table = dbClient.Table("Device")
+	return DeviceRepositoryDb{table}
 }
