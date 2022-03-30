@@ -46,7 +46,7 @@ func (d DeviceRepositoryDb) FindById(id string) (*domain.Device, *errors.AppErro
 	//	TableName: aws.String("Device"),
 	//}
 	var result domain.Device
-	err := d.table.Get("Id", id).
+	err := d.table.Get("id", id).
 		One(&result)
 	if err != nil {
 		return nil, errors.NotFoundError("Device not found" + err.Error())
