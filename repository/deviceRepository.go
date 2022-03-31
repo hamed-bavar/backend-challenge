@@ -14,11 +14,12 @@ type DeviceRepository interface {
 }
 
 type DeviceRepositoryDb struct {
-	table dynamo.Table
+	db *dynamo.DB
 }
 
 func (d DeviceRepositoryDb) Create(device *domain.Device) (*domain.Device, *errors.AppError) {
-	err := d.table.Put(device).Run()
+	var table = d.db.Table("Device")
+	err := table.Put(device).Run()
 	if err != nil {
 		logger.Error("Error while putting item in dynamoDb")
 		return nil, errors.InternalServerError("Internal Server Error")
@@ -28,7 +29,7 @@ func (d DeviceRepositoryDb) Create(device *domain.Device) (*domain.Device, *erro
 
 func (d DeviceRepositoryDb) FindById(id string) (*domain.Device, *errors.AppError) {
 	var result domain.Device
-	err := d.table.Get("id", id).
+	err := d.db.Table("Device").Get("id", id).
 		One(&result)
 	if err != nil {
 		return nil, errors.NotFoundError("Device not found")
@@ -36,6 +37,5 @@ func (d DeviceRepositoryDb) FindById(id string) (*domain.Device, *errors.AppErro
 	return &result, nil
 }
 func NewDeviceRepositoryDb(dbClient *dynamo.DB) DeviceRepositoryDb {
-	var table = dbClient.Table("Device")
-	return DeviceRepositoryDb{table}
+	return DeviceRepositoryDb{dbClient}
 }
