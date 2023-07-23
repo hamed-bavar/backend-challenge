@@ -14,7 +14,7 @@ unit tests coverage of services and controllers is 100% and unit tests coverage 
 you can see more details in cover.html file.
 I used **go muck** package to mock dynamodb,services and repositories.
 
-## overview of project structure
+## Overview of project structure
 In this project,I have tried to mimic hexagonal architecture. This architecture is utilized in frameworks like NestJS, ASP.NET, and others. In this project, we have a domain package where we can define our structs and models (and also our repository interface). Additionally, there is a repository that depends on the database, enabling us to interact with it. The services rely on the repositories.
 
 Within the services, we can validate requests, communicate with other services, or use the repository to interact with the database indirectly. Each route has a specific controller. These controllers have a dependency on services.
@@ -23,7 +23,7 @@ In the utils package, there are some global functions and utilities, while in th
 
 The gorilla/mux package provides request routing, validation, and other services in a straightforward, intuitive API.
 
-## logging
+## Logging
 In this project, zap package has been used for logging
 
 
