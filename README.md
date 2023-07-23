@@ -15,10 +15,12 @@ you can see more details in cover.html file.
 I used **go muck** package to mock dynamodb,services and repositories.
 
 ## overview of project structure
-in this project I used **hexagonal** architecture.this architecure is used in frameworks like nest js , asp.net ,... .in this project we have a domain package which we can define our structs and models in it (we can also define our repository interface in it).
-also there is a repository which has a dependency on the database and we can interact with database in it.There are services that depend on repositories.
-in services we can  validate requests and also communicate with other services or use repository to interact with detabase indirectly.each route has a specific controller.
-These controlers have a dependency on services.in utils package there are some global functions and utilities and in lib package there are some functions which we can easily separate them from project and consider as a new library (like error lib or logger lib).this project uses api gateway as proxy ,so all requests will capture by one lambda and  gorilla mux will process all requests.
+In this project, I used hexagonal architecture. This architecture is utilized in frameworks like NestJS, ASP.NET, and others. In this project, we have a domain package where we can define our structs and models (and also our repository interface). Additionally, there is a repository that depends on the database, enabling us to interact with it. The services rely on the repositories.
+
+Within the services, we can validate requests, communicate with other services, or use the repository to interact with the database indirectly. Each route has a specific controller. These controllers have a dependency on services.
+
+In the utils package, there are some global functions and utilities, while in the lib package, there are functions that can be easily separated from the project and treated as a new library (e.g., error lib or logger lib). For proxy, this project uses API gateway, capturing all requests by one lambda, and gorilla mux processes these requests.
+
 The gorilla/mux package provides request routing, validation, and other services in a straightforward, intuitive API.
 
 ## logging
